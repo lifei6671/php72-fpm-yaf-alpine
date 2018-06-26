@@ -21,7 +21,6 @@ RUN apk add --update git make gcc g++ imagemagick-dev \
 	libmemcached-dev \
 	cyrus-sasl-dev \
 	binutils \
-	&& pecl install imagick-$IMAGICK_VERSION \
 	&& rm -rf /var/cache/apk/* 
 
 RUN apk update && apk add ca-certificates && \
@@ -72,8 +71,8 @@ WORKDIR /usr/src/php/ext/
 # Compile Phalcon
 RUN set -xe && \
     curl -LO https://github.com/laruence/yaf/archive/yaf-3.0.6.tar.gz && \
-    tar xzf yaf-3.0.6.tar.gz && cd yaf-3.0.6 && phpize && ./configure --with-php-config=/usr/local/bin/php-config && make && make install && \
-    cd ../.. && rm -rf yaf-3.0.6.tar.gz yaf-3.0.6
+    tar xzf yaf-3.0.6.tar.gz && cd yaf-yaf-3.0.6 && phpize && ./configure --with-php-config=/usr/local/bin/php-config && make && make install && \
+    cd ../.. && rm -rf yaf-3.0.6.tar.gz yaf-yaf-3.0.6
 
 ADD conf/yaf.ini /usr/local/etc/php/conf.d/yaf.ini
 
