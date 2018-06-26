@@ -76,13 +76,6 @@ RUN set -xe && \
 
 ADD conf/yaf.ini /usr/local/etc/php/conf.d/yaf.ini
 
-#Compile XDebug
-RUN set -xe && \
-	curl -LO https://github.com/xdebug/xdebug/archive/XDEBUG_2_5_0.tar.gz && \
-	tar xzf XDEBUG_2_5_0.tar.gz && cd xdebug-XDEBUG_2_5_0 && \
-	phpize && ./configure --enable-xdebug && make && make install && \
-	cd ../ && rm -rf xdebug-XDEBUG_2_5_0
-
 RUN docker-php-source extract \
 	&& cd /usr/src/php/ext/bcmath \
 	&& phpize && ./configure --with-php-config=/usr/local/bin/php-config && make && make install \
