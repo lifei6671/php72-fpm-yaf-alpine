@@ -10,7 +10,8 @@ ENV IMAGICK_VERSION 3.4.2
 RUN apk add --update git make gcc g++ imagemagick-dev \
 	libc-dev \
 	autoconf \
-	libldap \
+	icu-dev \
+	openldap-dev \
 	freetype-dev \
 	libjpeg-turbo-dev \
 	libpng-dev \
@@ -29,6 +30,12 @@ RUN apk update && apk add ca-certificates && \
     ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
     echo "Asia/Shanghai" > /etc/timezone
 
+RUN apk update && \
+         apk add --no-cache --virtual .build-deps $PHPIZE_DEPS openldap-dev && \
+         docker-php-ext-install ldap && \
+         apk del .build-deps && \
+         rm -rf /tmp/* /var/cache/apk/*
+		 
 RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
         && docker-php-ext-install gd \
         && docker-php-ext-install mysqli \
@@ -37,7 +44,6 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
         && docker-php-ext-install pdo \
         && docker-php-ext-install pdo_mysql \
         && docker-php-ext-install opcache \
-		&& docker-php-ext-install ldap \
 		&& echo "extension=memcached.so" > /usr/local/etc/php/conf.d/memcached.ini \
 		&& echo "extension=redis.so" > /usr/local/etc/php/conf.d/phpredis.ini \
 		&& echo "extension=phalcon.so" > /usr/local/etc/php/conf.d/phalcon.ini \
