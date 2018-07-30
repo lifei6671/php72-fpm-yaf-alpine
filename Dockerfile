@@ -10,6 +10,7 @@ ENV IMAGICK_VERSION 3.4.2
 RUN apk add --update git make gcc g++ imagemagick-dev \
 	libc-dev \
 	autoconf \
+	libldap \
 	freetype-dev \
 	libjpeg-turbo-dev \
 	libpng-dev \
