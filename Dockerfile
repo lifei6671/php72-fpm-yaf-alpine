@@ -60,10 +60,11 @@ RUN set -xe && \
     curl -LO https://github.com/phalcon/cphalcon/archive/v${PHALCON_VERSION}.tar.gz && \
     tar xzf v${PHALCON_VERSION}.tar.gz && cd cphalcon-${PHALCON_VERSION}/build && sh install
 	
-ENV YAF_VERSION=3.0.6
+
 
 WORKDIR /usr/src/php/ext/
-# Compile Phalcon
+# Compile Yaf
+ENV YAF_VERSION=3.0.6
 RUN set -xe && \
     curl -LO https://github.com/laruence/yaf/archive/yaf-${YAF_VERSION}.tar.gz && \
     tar xzf yaf-${YAF_VERSION}.tar.gz && cd yaf-yaf-${YAF_VERSION} && phpize && ./configure --with-php-config=/usr/local/bin/php-config && make && make install
@@ -113,12 +114,12 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
         && docker-php-ext-install pdo \
         && docker-php-ext-install pdo_mysql \
         && docker-php-ext-install opcache \
-		&& docker-php-ext-enable memcached \
-		&& docker-php-ext-enable redis \
-		&& docker-php-ext-enable phalcon \
-		&& docker-php-ext-enable igbinary \
-		&& docker-php-ext-enable mongo \
-		&& docker-php-ext-enable bcmath
+		&& echo "extension=memcached.so" > /usr/local/etc/php/conf.d/memcached.ini \
+		&& echo "extension=redis.so" > /usr/local/etc/php/conf.d/phpredis.ini \
+		&& echo "extension=phalcon.so" > /usr/local/etc/php/conf.d/phalcon.ini \
+		&& echo "extension=igbinary.so" > /usr/local/etc/php/conf.d/igbinary.ini \
+		&& echo "extension=mongo.so" > /usr/local/etc/php/conf.d/mongo.ini \
+		&& echo "extension=bcmath.so" > /usr/local/etc/php/conf.d/bcmath.ini 
 	
 
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
