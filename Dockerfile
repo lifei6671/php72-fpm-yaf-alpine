@@ -81,9 +81,11 @@ FROM php:7.2.6-fpm-alpine
 
 LABEL maintainer="longfei6671@163.com"
 
-RUN apk add --update openssl \
-	openssl-dev \
+RUN apk add --update \
 	libc-dev \
+	autoconf \
+	icu-dev \
+	openldap-dev \
 	freetype-dev \
 	libjpeg-turbo-dev \
 	libpng-dev \
@@ -91,9 +93,10 @@ RUN apk add --update openssl \
 	libpcre32 \
 	bzip2 \
 	libbz2 \
+	bzip2-dev \
 	libmemcached-dev \
 	cyrus-sasl-dev \
-	bzip2 \
+	binutils \
 	&& rm -rf /var/cache/apk/* 
 
 COPY --from=0 /usr/local/lib/php/extensions/no-debug-non-zts-20170718/* /usr/local/lib/php/extensions/no-debug-non-zts-20170718/
