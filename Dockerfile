@@ -112,12 +112,12 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
         && docker-php-ext-install pdo_mysql \
         && docker-php-ext-install opcache \
 		&& docker-php-ext-install mcrypt \
-		&& docker-php-ext-enable memcached \
-		&& docker-php-ext-enable redis \
-		&& docker-php-ext-enable phalcon \
-		&& docker-php-ext-enable igbinary \
-		&& docker-php-ext-enable bcmath \
-		&& docker-php-ext-enable mongo
+		&& echo "extension=memcached.so" > /usr/local/etc/php/conf.d/memcached.ini \
+		&& echo "extension=redis.so" > /usr/local/etc/php/conf.d/phpredis.ini \
+		&& echo "extension=phalcon.so" > /usr/local/etc/php/conf.d/phalcon.ini \
+		&& echo "extension=igbinary.so" > /usr/local/etc/php/conf.d/igbinary.ini \
+		&& echo "extension=mongo.so" > /usr/local/etc/php/conf.d/mongo.ini \
+		&& echo "extension=bcmath.so" > /usr/local/etc/php/conf.d/bcmath.ini 
 	
 
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
