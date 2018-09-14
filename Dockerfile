@@ -1,7 +1,5 @@
 FROM php:7.2.6-fpm-alpine
 
-MAINTAINER Minho <longfei6671@163.com>
-
 ADD conf/php.ini /usr/local/etc/php/php.ini
 ADD conf/www.conf /usr/local/etc/php-fpm.d/www.conf
 
@@ -24,11 +22,6 @@ RUN apk add --update git make gcc g++ imagemagick-dev \
 	cyrus-sasl-dev \
 	binutils \
 	&& rm -rf /var/cache/apk/* 
-
-RUN apk update && apk add ca-certificates && \
-    apk add tzdata && \
-    ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
-    echo "Asia/Shanghai" > /etc/timezone
 
 RUN apk update && \
          apk add --no-cache --virtual .build-deps $PHPIZE_DEPS openldap-dev && \
@@ -54,31 +47,34 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
 WORKDIR /usr/src/php/ext/
 
 RUN git clone -b php7-dev-playground1 https://github.com/igbinary/igbinary.git && \
-	cd igbinary && phpize && ./configure CFLAGS="-O2 -g" --enable-igbinary && make install && \
-	cd ../ && rm -rf igbinary
+	cd igbinary && phpize && ./configure CFLAGS="-O2 -g" --enable-igbinary && make install
 	
 # Compile Memcached 
 RUN git clone -b php7 https://github.com/php-memcached-dev/php-memcached.git && \
 	cd php-memcached && phpize && ./configure && make && make install && \
-	echo "extension=memcached.so" > /usr/local/etc/php/conf.d/phpredis.ini && \
-	cd .. && rm -rf php-memcached 
+	echo "extension=memcached.so" > /usr/local/etc/php/conf.d/phpredis.ini
 	
 ENV PHPREDIS_VERSION=3.0.0
 
 RUN set -xe && \
 	curl -LO https://github.com/phpredis/phpredis/archive/${PHPREDIS_VERSION}.tar.gz && \
 	tar xzf ${PHPREDIS_VERSION}.tar.gz && cd phpredis-${PHPREDIS_VERSION} && phpize && ./configure --enable-redis-igbinary && make && make install && \
-	echo "extension=redis.so" > /usr/local/etc/php/conf.d/phpredis.ini && \
-	cd ../ && rm -rf  phpredis-${PHPREDIS_VERSION} ${PHPREDIS_VERSION}.tar.gz
+	echo "extension=redis.so" > /usr/local/etc/php/conf.d/phpredis.ini
+	
+# Compile Phalcon
+ENV PHALCON_VERSION=3.0.1
+RUN set -xe && \
+    curl -LO https://github.com/phalcon/cphalcon/archive/v${PHALCON_VERSION}.tar.gz && \
+    tar xzf v${PHALCON_VERSION}.tar.gz && cd cphalcon-${PHALCON_VERSION}/build && sh install && \
+    echo "extension=phalcon.so" > /usr/local/etc/php/conf.d/phalcon.ini
 	
 ENV YAF_VERSION=3.0.6
 
 WORKDIR /usr/src/php/ext/
 # Compile Phalcon
 RUN set -xe && \
-    curl -LO https://github.com/laruence/yaf/archive/yaf-3.0.6.tar.gz && \
-    tar xzf yaf-3.0.6.tar.gz && cd yaf-yaf-3.0.6 && phpize && ./configure --with-php-config=/usr/local/bin/php-config && make && make install && \
-    cd ../.. && rm -rf yaf-3.0.6.tar.gz yaf-yaf-3.0.6
+    curl -LO https://github.com/laruence/yaf/archive/yaf-${YAF_VERSION}.tar.gz && \
+    tar xzf yaf-${YAF_VERSION}.tar.gz && cd yaf-yaf-${YAF_VERSION} && phpize && ./configure --with-php-config=/usr/local/bin/php-config && make && make install
 
 ADD conf/yaf.ini /usr/local/etc/php/conf.d/yaf.ini
 
@@ -87,3 +83,56 @@ RUN docker-php-source extract \
 	&& phpize && ./configure --with-php-config=/usr/local/bin/php-config && make && make install \
 	&& make clean \
 	&& docker-php-source delete
+
+	
+FROM php:7.2.6-fpm-alpine
+
+LABEL maintainer="longfei6671@163.com"
+
+RUN apk add --update openssl \
+	openssl-dev \
+	libc-dev \
+	freetype-dev \
+	libjpeg-turbo-dev \
+	libpng-dev \
+	libmcrypt-dev \
+	libpcre32 \
+	bzip2 \
+	libbz2 \
+	libmemcached-dev \
+	cyrus-sasl-dev \
+	bzip2 \
+	&& rm -rf /var/cache/apk/* 
+
+COPY --from=0 /usr/local/lib/php/extensions/no-debug-non-zts-20170718/* /usr/local/lib/php/extensions/no-debug-non-zts-20170718/
+COPY docker-entrypoint.sh /usr/local/bin/
+ADD conf/php.ini /usr/local/etc/php/php.ini
+ADD conf/www.conf /usr/local/etc/php-fpm.d/www.conf
+ADD conf/yaf.ini /usr/local/etc/php/conf.d/yaf.ini
+	
+RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
+        && docker-php-ext-install gd \
+		&& docker-php-ext-install mcrypt \
+        && docker-php-ext-install mysqli \
+        && docker-php-ext-install bz2 \
+        && docker-php-ext-install zip \
+        && docker-php-ext-install pdo \
+        && docker-php-ext-install pdo_mysql \
+        && docker-php-ext-install opcache \
+		&& docker-php-ext-install mcrypt \
+		&& docker-php-ext-enable memcached \
+		&& docker-php-ext-enable redis \
+		&& docker-php-ext-enable phalcon \
+		&& docker-php-ext-enable igbinary \
+		&& docker-php-ext-enable bcmath \
+		&& docker-php-ext-enable mongo
+	
+
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+RUN ln -s usr/local/bin/docker-entrypoint.sh /entrypoint.sh # backwards compat
+
+ENTRYPOINT ["/entrypoint.sh"]
+
+EXPOSE 9000
+
+CMD ["php-fpm"]
