@@ -61,10 +61,10 @@ RUN set -xe && \
     tar xzf v${PHALCON_VERSION}.tar.gz && cd cphalcon-${PHALCON_VERSION}/build && sh install
 	
 # Compile Mongo
-ENV MONGO_VERSION=1.6.16
+ENV MONGO_VERSION=1.5.2
 RUN set -xe && \
-	curl -LO https://github.com/mongodb/mongo-php-driver-legacy/archive/${MONGO_VERSION}.tar.gz && \
-	tar xzf ${MONGO_VERSION}.tar.gz && cd mongo-php-driver-legacy-${MONGO_VERSION}  && phpize && ./configure && make && make install 
+	curl -LO https://pecl.php.net/get/mongodb-${MONGO_VERSION}.tgz && \
+	tar xzf mongodb-${MONGO_VERSION}.tgz && cd mongodb-${MONGO_VERSION}  && phpize && ./configure && make && make install 
 
 WORKDIR /usr/src/php/ext/
 # Compile Yaf
@@ -122,7 +122,7 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
 		&& echo "extension=redis.so" > /usr/local/etc/php/conf.d/phpredis.ini \
 		&& echo "extension=phalcon.so" > /usr/local/etc/php/conf.d/phalcon.ini \
 		&& echo "extension=igbinary.so" > /usr/local/etc/php/conf.d/igbinary.ini \
-		&& echo "extension=mongo.so" > /usr/local/etc/php/conf.d/mongo.ini \
+		&& echo "extension=mongodb.so" > /usr/local/etc/php/conf.d/mongodb.ini \
 		&& echo "extension=bcmath.so" > /usr/local/etc/php/conf.d/bcmath.ini 
 	
 
