@@ -64,7 +64,7 @@ RUN set -xe && \
 ENV MONGO_VERSION=1.6.16
 RUN set -xe && \
 	curl -LO https://github.com/mongodb/mongo-php-driver-legacy/archive/${MONGO_VERSION}.tar.gz && \
-	tar xzf ${MONGO_VERSION}.tar.gz && cd mongo-php-driver-legacy-${MONGO_VERSION}  && phpize && ./configure && make && make install \
+	tar xzf ${MONGO_VERSION}.tar.gz && cd mongo-php-driver-legacy-${MONGO_VERSION}  && phpize && ./configure && make && make install 
 
 WORKDIR /usr/src/php/ext/
 # Compile Yaf
