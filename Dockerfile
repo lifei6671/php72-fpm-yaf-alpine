@@ -23,11 +23,6 @@ RUN apk add --update git make gcc g++ imagemagick-dev \
 	binutils \
 	&& rm -rf /var/cache/apk/* 
 
-RUN apk update && \
-         apk add --no-cache --virtual .build-deps $PHPIZE_DEPS openldap-dev && \
-         docker-php-ext-install ldap && \
-         apk del .build-deps && \
-         rm -rf /tmp/* /var/cache/apk/*
 		 
 RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
         && docker-php-ext-install gd \
@@ -51,22 +46,19 @@ RUN git clone -b php7-dev-playground1 https://github.com/igbinary/igbinary.git &
 	
 # Compile Memcached 
 RUN git clone -b php7 https://github.com/php-memcached-dev/php-memcached.git && \
-	cd php-memcached && phpize && ./configure && make && make install && \
-	echo "extension=memcached.so" > /usr/local/etc/php/conf.d/phpredis.ini
+	cd php-memcached && phpize && ./configure && make && make install
 	
 ENV PHPREDIS_VERSION=3.0.0
 
 RUN set -xe && \
 	curl -LO https://github.com/phpredis/phpredis/archive/${PHPREDIS_VERSION}.tar.gz && \
-	tar xzf ${PHPREDIS_VERSION}.tar.gz && cd phpredis-${PHPREDIS_VERSION} && phpize && ./configure --enable-redis-igbinary && make && make install && \
-	echo "extension=redis.so" > /usr/local/etc/php/conf.d/phpredis.ini
+	tar xzf ${PHPREDIS_VERSION}.tar.gz && cd phpredis-${PHPREDIS_VERSION} && phpize && ./configure --enable-redis-igbinary && make && make install 
 	
 # Compile Phalcon
-ENV PHALCON_VERSION=3.0.1
+ENV PHALCON_VERSION=3.4.1
 RUN set -xe && \
     curl -LO https://github.com/phalcon/cphalcon/archive/v${PHALCON_VERSION}.tar.gz && \
-    tar xzf v${PHALCON_VERSION}.tar.gz && cd cphalcon-${PHALCON_VERSION}/build && sh install && \
-    echo "extension=phalcon.so" > /usr/local/etc/php/conf.d/phalcon.ini
+    tar xzf v${PHALCON_VERSION}.tar.gz && cd cphalcon-${PHALCON_VERSION}/build && sh install
 	
 ENV YAF_VERSION=3.0.6
 
