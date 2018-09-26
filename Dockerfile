@@ -21,6 +21,7 @@ RUN apk add --update git make gcc g++ imagemagick-dev \
 	libmemcached-dev \
 	cyrus-sasl-dev \
 	binutils \
+	pcre-devel \
 	&& rm -rf /var/cache/apk/* 
 
 		 
@@ -41,6 +42,8 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
 
 		
 WORKDIR /usr/src/php/ext/
+
+RUN pecl install swoole
 
 RUN git clone -b php7-dev-playground1 https://github.com/igbinary/igbinary.git && \
 	cd igbinary && phpize && ./configure CFLAGS="-O2 -g" --enable-igbinary && make install
@@ -113,6 +116,7 @@ ADD conf/yaf.ini /usr/local/etc/php/conf.d/yaf.ini
 	
 RUN echo "extension=pdo.so" > /usr/local/etc/php/conf.d/pdo.ini \
 		&& echo "extension=ldap.so" > /usr/local/etc/php/conf.d/ldap.ini \
+		&& echo "extension=swoole.so" > /usr/local/etc/php/conf.d/swoole.ini \
 		&& echo "extension=gd.so" > /usr/local/etc/php/conf.d/gd.ini \
 		&& echo "extension=mysqli.so" > /usr/local/etc/php/conf.d/mysqli.ini \
 		&& echo "extension=bz2.so" > /usr/local/etc/php/conf.d/bz2.ini \
