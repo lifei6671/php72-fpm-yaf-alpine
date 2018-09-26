@@ -32,6 +32,7 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
         && docker-php-ext-install pdo \
         && docker-php-ext-install pdo_mysql \
         && docker-php-ext-install opcache \
+		&& docker-php-ext-install ldap \
 		&& echo "extension=memcached.so" > /usr/local/etc/php/conf.d/memcached.ini \
 		&& echo "extension=redis.so" > /usr/local/etc/php/conf.d/phpredis.ini \
 		&& echo "extension=phalcon.so" > /usr/local/etc/php/conf.d/phalcon.ini \
@@ -110,14 +111,14 @@ ADD conf/php.ini /usr/local/etc/php/php.ini
 ADD conf/www.conf /usr/local/etc/php-fpm.d/www.conf
 ADD conf/yaf.ini /usr/local/etc/php/conf.d/yaf.ini
 	
-RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
-        && docker-php-ext-install gd \
-        && docker-php-ext-install mysqli \
-        && docker-php-ext-install bz2 \
-        && docker-php-ext-install zip \
-        && docker-php-ext-install pdo \
-        && docker-php-ext-install pdo_mysql \
-        && docker-php-ext-install opcache \
+RUN echo "extension=pdo.so" > /usr/local/etc/php/conf.d/pdo.ini \
+		&& echo "extension=ldap.so" > /usr/local/etc/php/conf.d/ldap.ini \
+		&& echo "extension=gd.so" > /usr/local/etc/php/conf.d/gd.ini \
+		&& echo "extension=mysqli.so" > /usr/local/etc/php/conf.d/mysqli.ini \
+		&& echo "extension=bz2.so" > /usr/local/etc/php/conf.d/bz2.ini \
+		&& echo "extension=zip.so" > /usr/local/etc/php/conf.d/zip.ini \
+		&& echo "extension=pdo_mysql.so" > /usr/local/etc/php/conf.d/pdo_mysql.ini \
+		&& echo "extension=opcache.so" > /usr/local/etc/php/conf.d/opcache.ini \
 		&& echo "extension=memcached.so" > /usr/local/etc/php/conf.d/memcached.ini \
 		&& echo "extension=redis.so" > /usr/local/etc/php/conf.d/phpredis.ini \
 		&& echo "extension=phalcon.so" > /usr/local/etc/php/conf.d/phalcon.ini \
