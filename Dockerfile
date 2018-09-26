@@ -21,7 +21,6 @@ RUN apk add --update git make gcc g++ imagemagick-dev \
 	libmemcached-dev \
 	cyrus-sasl-dev \
 	binutils \
-	pcre-devel \
 	&& rm -rf /var/cache/apk/* 
 
 		 
