@@ -126,7 +126,11 @@ RUN echo "extension=ldap.so" > /usr/local/etc/php/conf.d/ldap.ini \
 		&& echo "extension=phalcon.so" > /usr/local/etc/php/conf.d/phalcon.ini \
 		&& echo "extension=igbinary.so" > /usr/local/etc/php/conf.d/igbinary.ini \
 		&& echo "extension=mongodb.so" > /usr/local/etc/php/conf.d/mongodb.ini \
-		&& echo "extension=bcmath.so" > /usr/local/etc/php/conf.d/bcmath.ini 
+		&& echo "extension=bcmath.so" > /usr/local/etc/php/conf.d/bcmath.ini \
+		&& echo "extension=pdo_mysql.so" > /usr/local/etc/php/conf.d/pdo_mysql.ini
+
+
+
 
 EXPOSE 9000
 
