@@ -112,6 +112,8 @@ COPY docker-entrypoint.sh /usr/local/bin/
 ADD conf/php.ini /usr/local/etc/php/php.ini
 ADD conf/www.conf /usr/local/etc/php-fpm.d/www.conf
 ADD conf/yaf.ini /usr/local/etc/php/conf.d/yaf.ini
+
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 	
 RUN echo "extension=ldap.so" > /usr/local/etc/php/conf.d/ldap.ini \
 		&& echo "extension=swoole.so" > /usr/local/etc/php/conf.d/swoole.ini \

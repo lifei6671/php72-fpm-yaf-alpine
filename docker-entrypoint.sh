@@ -1,13 +1,5 @@
 #!/bin/sh
-set -eo pipefail
-
-#exec php-fpm
-
-# first arg is `-f` or `--some-option`
-# or first arg is `something.conf`
-#if [ "${1#-}" != "$1" ] || [ "${1%.conf}" != "$1" ]; then
-#	set -- php-fpm "$@"
-#fi
+set -e
 
 if [ ! -z $YAF_ENVIRON ]; then
 	sed -i "s#^yaf.environ=.*#yaf.environ=${YAF_ENVIRON}#g" /usr/local/etc/php/conf.d/yaf.ini
