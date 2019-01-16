@@ -39,51 +39,29 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
 		&& docker-php-ext-install sysvmsg \
     	&& docker-php-ext-install sysvsem \
     	&& docker-php-ext-install sysvshm \
+		&& docker-php-ext-install bcmath \
 		&& echo "extension=memcached.so" > /usr/local/etc/php/conf.d/memcached.ini \
 		&& echo "extension=redis.so" > /usr/local/etc/php/conf.d/phpredis.ini \
 		&& echo "extension=phalcon.so" > /usr/local/etc/php/conf.d/phalcon.ini \
-		&& echo "extension=igbinary.so" > /usr/local/etc/php/conf.d/igbinary.ini \
-		&& echo "extension=bcmath.so" > /usr/local/etc/php/conf.d/bcmath.ini 
+		&& echo "extension=igbinary.so" > /usr/local/etc/php/conf.d/igbinary.ini
 
 		
 WORKDIR /usr/src/php/ext/
 
-RUN pecl install swoole \
+RUN pecl install swoole  4.2.12 \
 	&& pecl install amqp 1.9.4 \
 	&& pecl install imagick 3.4.3 \
 	&& pecl install redis 4.2.0 \
-	&& pecl install memcached 3.1.3
+	&& pecl install memcached 3.1.3 \
+	&& pecl install mongodb  1.5.3 \
+	&& pecl install igbinary 2.0.8 \
+	&& pecl install yaf 3.0.7 
 
-RUN git clone -b php7-dev-playground1 https://github.com/igbinary/igbinary.git && \
-	cd igbinary && phpize && ./configure CFLAGS="-O2 -g" --enable-igbinary && make install
-	
 # Compile Phalcon
 ENV PHALCON_VERSION=3.4.1
 RUN set -xe && \
     curl -LO https://github.com/phalcon/cphalcon/archive/v${PHALCON_VERSION}.tar.gz && \
     tar xzf v${PHALCON_VERSION}.tar.gz && cd cphalcon-${PHALCON_VERSION}/build && sh install
-	
-# Compile Mongo
-ENV MONGO_VERSION=1.5.2
-RUN set -xe && \
-	curl -LO https://pecl.php.net/get/mongodb-${MONGO_VERSION}.tgz && \
-	tar xzf mongodb-${MONGO_VERSION}.tgz && cd mongodb-${MONGO_VERSION}  && phpize && ./configure && make && make install 
-
-WORKDIR /usr/src/php/ext/
-# Compile Yaf
-ENV YAF_VERSION=3.0.6
-RUN set -xe && \
-    curl -LO https://github.com/laruence/yaf/archive/yaf-${YAF_VERSION}.tar.gz && \
-    tar xzf yaf-${YAF_VERSION}.tar.gz && cd yaf-yaf-${YAF_VERSION} && phpize && ./configure --with-php-config=/usr/local/bin/php-config && make && make install
-
-ADD conf/yaf.ini /usr/local/etc/php/conf.d/yaf.ini
-
-RUN docker-php-source extract \
-	&& cd /usr/src/php/ext/bcmath \
-	&& phpize && ./configure --with-php-config=/usr/local/bin/php-config && make && make install \
-	&& make clean \
-	&& docker-php-source delete
-
 	
 FROM php:7.2.6-fpm-alpine
 
@@ -127,10 +105,14 @@ RUN echo "extension=ldap.so" > /usr/local/etc/php/conf.d/ldap.ini \
 		&& echo "extension=igbinary.so" > /usr/local/etc/php/conf.d/igbinary.ini \
 		&& echo "extension=mongodb.so" > /usr/local/etc/php/conf.d/mongodb.ini \
 		&& echo "extension=bcmath.so" > /usr/local/etc/php/conf.d/bcmath.ini \
-		&& echo "extension=pdo_mysql.so" > /usr/local/etc/php/conf.d/pdo_mysql.ini
-
-
-
+		&& echo "extension=pdo_mysql.so" > /usr/local/etc/php/conf.d/pdo_mysql.ini \
+		&& echo "extension=amqp.so" > /usr/local/etc/php/conf.d/amqp.ini \
+		&& echo "extension=imagick.so" > /usr/local/etc/php/conf.d/imagick.ini \
+		&& echo "extension=sockets.so" > /usr/local/etc/php/conf.d/sockets.ini \
+		&& echo "extension=sysvmsg.so" > /usr/local/etc/php/conf.d/sysvmsg.ini \
+		&& echo "extension=sysvshm.so" > /usr/local/etc/php/conf.d/sysvshm.ini \
+		&& echo "extension=opcache.so" > /usr/local/etc/php/conf.d/opcache.ini \
+		&& echo "extension=sodium.so" > /usr/local/etc/php/conf.d/sodium.ini
 
 EXPOSE 9000
 
