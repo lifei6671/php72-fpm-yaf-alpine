@@ -20,6 +20,8 @@ RUN apk add --update git make gcc g++ imagemagick-dev \
 	bzip2-dev \
 	libmemcached-dev \
 	cyrus-sasl-dev \
+	rabbitmq-c \
+    rabbitmq-c-dev \
 	binutils \
 	&& rm -rf /var/cache/apk/* 
 
@@ -33,6 +35,10 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
         && docker-php-ext-install pdo_mysql \
         && docker-php-ext-install opcache \
 		&& docker-php-ext-install ldap \
+		&& docker-php-ext-install sockets \
+		&& docker-php-ext-install sysvmsg \
+    	&& docker-php-ext-install sysvsem \
+    	&& docker-php-ext-install sysvshm \
 		&& echo "extension=memcached.so" > /usr/local/etc/php/conf.d/memcached.ini \
 		&& echo "extension=redis.so" > /usr/local/etc/php/conf.d/phpredis.ini \
 		&& echo "extension=phalcon.so" > /usr/local/etc/php/conf.d/phalcon.ini \
@@ -42,20 +48,14 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
 		
 WORKDIR /usr/src/php/ext/
 
-RUN pecl install swoole
+RUN pecl install swoole \
+	&& pecl install amqp 1.9.4 \
+	&& pecl install imagick 3.4.3 \
+	&& pecl install redis 4.2.0 \
+	&& pecl install memcached 3.1.3
 
 RUN git clone -b php7-dev-playground1 https://github.com/igbinary/igbinary.git && \
 	cd igbinary && phpize && ./configure CFLAGS="-O2 -g" --enable-igbinary && make install
-	
-# Compile Memcached 
-RUN git clone -b php7 https://github.com/php-memcached-dev/php-memcached.git && \
-	cd php-memcached && phpize && ./configure && make && make install
-	
-ENV PHPREDIS_VERSION=3.0.0
-
-RUN set -xe && \
-	curl -LO https://github.com/phpredis/phpredis/archive/${PHPREDIS_VERSION}.tar.gz && \
-	tar xzf ${PHPREDIS_VERSION}.tar.gz && cd phpredis-${PHPREDIS_VERSION} && phpize && ./configure --enable-redis-igbinary && make && make install 
 	
 # Compile Phalcon
 ENV PHALCON_VERSION=3.4.1
@@ -89,21 +89,21 @@ FROM php:7.2.6-fpm-alpine
 
 LABEL maintainer="longfei6671@163.com"
 
-RUN apk add --update \
+RUN apk add --update --no-cache \
 	libc-dev \
-	autoconf \
 	icu-dev \
 	openldap-dev \
 	freetype-dev \
 	libjpeg-turbo-dev \
 	libpng-dev \
 	libmcrypt-dev \
-	libpcre32 \
 	bzip2 \
 	libbz2 \
 	bzip2-dev \
 	libmemcached-dev \
 	cyrus-sasl-dev \
+	rabbitmq-c \
+    rabbitmq-c-dev \
 	binutils \
 	&& rm -rf /var/cache/apk/* 
 
