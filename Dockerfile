@@ -3,7 +3,6 @@ FROM php:7.2.6-fpm-alpine
 ADD conf/php.ini /usr/local/etc/php/php.ini
 ADD conf/www.conf /usr/local/etc/php-fpm.d/www.conf
 
-ENV IMAGICK_VERSION 3.4.2
 #Alpine packages
 RUN apk add --update git make gcc g++ imagemagick-dev \
 	libc-dev \
@@ -82,7 +81,6 @@ RUN apk add --update --no-cache \
 	cyrus-sasl-dev \
 	rabbitmq-c \
     rabbitmq-c-dev \
-	binutils \
 	&& rm -rf /var/cache/apk/* 
 
 COPY --from=0 /usr/local/lib/php/extensions/no-debug-non-zts-20170718/* /usr/local/lib/php/extensions/no-debug-non-zts-20170718/
@@ -113,6 +111,8 @@ RUN echo "extension=ldap.so" > /usr/local/etc/php/conf.d/ldap.ini \
 		&& echo "extension=sysvshm.so" > /usr/local/etc/php/conf.d/sysvshm.ini \
 		&& echo "extension=opcache.so" > /usr/local/etc/php/conf.d/opcache.ini \
 		&& echo "extension=sodium.so" > /usr/local/etc/php/conf.d/sodium.ini
+
+WORKDIR /var/www/
 
 EXPOSE 9000
 
