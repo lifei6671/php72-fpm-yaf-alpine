@@ -25,6 +25,9 @@ RUN apk add --update git make gcc g++ imagemagick-dev \
 	&& rm -rf /var/cache/apk/* 
 
 		 
+RUN apk add --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing gnu-libiconv
+ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so php
+
 RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
         && docker-php-ext-install gd \
         && docker-php-ext-install mysqli \
@@ -82,6 +85,8 @@ RUN apk add --update --no-cache \
 	rabbitmq-c \
     rabbitmq-c-dev \
 	&& rm -rf /var/cache/apk/* 
+RUN apk add --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing gnu-libiconv
+ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so php
 
 COPY --from=0 /usr/local/lib/php/extensions/no-debug-non-zts-20170718/* /usr/local/lib/php/extensions/no-debug-non-zts-20170718/
 COPY docker-entrypoint.sh /usr/local/bin/
