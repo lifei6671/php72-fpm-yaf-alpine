@@ -87,6 +87,7 @@ RUN apk add --update --no-cache \
     rabbitmq-c-dev \
 	imagemagick-dev \
 	&& rm -rf /var/cache/apk/* 
+	
 RUN apk add --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing gnu-libiconv
 ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so php
 
@@ -115,8 +116,7 @@ RUN echo "extension=ldap.so" > /usr/local/etc/php/conf.d/ldap.ini \
 		&& echo "extension=imagick.so" > /usr/local/etc/php/conf.d/imagick.ini \
 		&& echo "extension=sockets.so" > /usr/local/etc/php/conf.d/sockets.ini \
 		&& echo "extension=sysvmsg.so" > /usr/local/etc/php/conf.d/sysvmsg.ini \
-		&& echo "extension=sysvshm.so" > /usr/local/etc/php/conf.d/sysvshm.ini \
-		&& echo "extension=sodium.so" > /usr/local/etc/php/conf.d/sodium.ini
+		&& echo "extension=sysvshm.so" > /usr/local/etc/php/conf.d/sysvshm.ini
 
 WORKDIR /var/www/
 
