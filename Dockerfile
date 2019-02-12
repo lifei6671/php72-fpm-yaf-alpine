@@ -22,6 +22,7 @@ RUN apk add --update git make gcc g++ imagemagick-dev \
 	rabbitmq-c \
     rabbitmq-c-dev \
 	binutils \
+	imagemagick-dev \
 	&& rm -rf /var/cache/apk/* 
 
 		 
@@ -84,6 +85,7 @@ RUN apk add --update --no-cache \
 	cyrus-sasl-dev \
 	rabbitmq-c \
     rabbitmq-c-dev \
+	imagemagick-dev \
 	&& rm -rf /var/cache/apk/* 
 RUN apk add --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing gnu-libiconv
 ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so php
@@ -114,7 +116,6 @@ RUN echo "extension=ldap.so" > /usr/local/etc/php/conf.d/ldap.ini \
 		&& echo "extension=sockets.so" > /usr/local/etc/php/conf.d/sockets.ini \
 		&& echo "extension=sysvmsg.so" > /usr/local/etc/php/conf.d/sysvmsg.ini \
 		&& echo "extension=sysvshm.so" > /usr/local/etc/php/conf.d/sysvshm.ini \
-		&& echo "extension=opcache.so" > /usr/local/etc/php/conf.d/opcache.ini \
 		&& echo "extension=sodium.so" > /usr/local/etc/php/conf.d/sodium.ini
 
 WORKDIR /var/www/
