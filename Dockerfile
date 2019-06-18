@@ -68,8 +68,8 @@ RUN set -xe && \
 
 ENV YAC_VERSION=2.0.2
 RUN set -xe && \
-	curl -LO https://github.com/laruence/yac/archive/yac-${YAC_VERSION}}.tar.gz && \
-	tar xzf yac-${YAC_VERSION}}.tar.gz && cd yac-yac-${YAC_VERSION}} && \
+	curl -LO https://github.com/laruence/yac/archive/yac-${YAC_VERSION}.tar.gz && \
+	tar xzf yac-${YAC_VERSION}.tar.gz && cd yac-yac-${YAC_VERSION} && \
 	phpize && ./configure --with-php-config=/usr/local/bin/php-config && make && make install
 
 FROM php:7.2.6-fpm-alpine
