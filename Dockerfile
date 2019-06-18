@@ -65,7 +65,13 @@ ENV PHALCON_VERSION=3.4.1
 RUN set -xe && \
     curl -LO https://github.com/phalcon/cphalcon/archive/v${PHALCON_VERSION}.tar.gz && \
     tar xzf v${PHALCON_VERSION}.tar.gz && cd cphalcon-${PHALCON_VERSION}/build && sh install
-	
+
+ENV YAC_VERSION=2.0.2
+RUN set -xe && \
+	curl -LO https://github.com/laruence/yac/archive/yac-${YAC_VERSION}}.tar.gz && \
+	tar xzf yac-${YAC_VERSION}}.tar.gz && cd yac-${YAC_VERSION}} && \
+	phpize && ./configure --with-php-config=/usr/local/bin/php-config && make && make install
+
 FROM php:7.2.6-fpm-alpine
 
 LABEL maintainer="longfei6671@163.com"
@@ -116,7 +122,9 @@ RUN echo "extension=ldap.so" > /usr/local/etc/php/conf.d/ldap.ini \
 		&& echo "extension=imagick.so" > /usr/local/etc/php/conf.d/imagick.ini \
 		&& echo "extension=sockets.so" > /usr/local/etc/php/conf.d/sockets.ini \
 		&& echo "extension=sysvmsg.so" > /usr/local/etc/php/conf.d/sysvmsg.ini \
-		&& echo "extension=sysvshm.so" > /usr/local/etc/php/conf.d/sysvshm.ini
+		&& echo "extension=sysvshm.so" > /usr/local/etc/php/conf.d/sysvshm.ini 
+
+ADD conf/yac.ini /usr/local/etc/php/conf.d/yac.ini
 
 WORKDIR /var/www/
 
