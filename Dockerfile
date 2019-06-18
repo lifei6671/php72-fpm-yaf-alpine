@@ -69,7 +69,7 @@ RUN set -xe && \
 ENV YAC_VERSION=2.0.2
 RUN set -xe && \
 	curl -LO https://github.com/laruence/yac/archive/yac-${YAC_VERSION}}.tar.gz && \
-	tar xzf yac-${YAC_VERSION}}.tar.gz && cd yac-${YAC_VERSION}} && \
+	tar xzf yac-${YAC_VERSION}}.tar.gz && cd yac-yac-${YAC_VERSION}} && \
 	phpize && ./configure --with-php-config=/usr/local/bin/php-config && make && make install
 
 FROM php:7.2.6-fpm-alpine
@@ -94,7 +94,7 @@ RUN apk add --update --no-cache \
 	imagemagick-dev \
 	&& rm -rf /var/cache/apk/* 
 	
-RUN apk add --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing gnu-libiconv
+#RUN apk add --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing gnu-libiconv
 ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so php
 
 COPY --from=0 /usr/local/lib/php/extensions/no-debug-non-zts-20170718/* /usr/local/lib/php/extensions/no-debug-non-zts-20170718/
