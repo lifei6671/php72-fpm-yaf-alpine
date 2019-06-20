@@ -102,6 +102,7 @@ COPY docker-entrypoint.sh /usr/local/bin/
 ADD conf/php.ini /usr/local/etc/php/php.ini
 ADD conf/www.conf /usr/local/etc/php-fpm.d/www.conf
 ADD conf/yaf.ini /usr/local/etc/php/conf.d/yaf.ini
+RUN rm /etc/localtime && ln -s /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 	
