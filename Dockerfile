@@ -23,9 +23,9 @@ RUN apk add --update git make gcc g++ imagemagick-dev \
     rabbitmq-c-dev \
 	binutils \
 	imagemagick-dev \
-	&& rm -rf /var/cache/apk/* 
+	&& rm -rf /var/cache/apk/*
 
-		 
+
 #RUN apk add --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing gnu-libiconv
 ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so php
 
@@ -48,7 +48,7 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
 		&& echo "extension=phalcon.so" > /usr/local/etc/php/conf.d/phalcon.ini \
 		&& echo "extension=igbinary.so" > /usr/local/etc/php/conf.d/igbinary.ini
 
-		
+
 WORKDIR /usr/src/php/ext/
 
 RUN pecl install swoole  4.2.12 \
@@ -58,7 +58,8 @@ RUN pecl install swoole  4.2.12 \
 	&& pecl install memcached 3.1.3 \
 	&& pecl install mongodb  1.5.3 \
 	&& pecl install igbinary 2.0.8 \
-	&& pecl install yaf 3.0.7 
+	&& pecl install yaf 3.0.7 \
+	&& pecl install grpc
 
 # Compile Phalcon
 ENV PHALCON_VERSION=3.4.1
@@ -92,8 +93,8 @@ RUN apk add --update --no-cache \
 	rabbitmq-c \
     rabbitmq-c-dev \
 	imagemagick-dev \
-	&& rm -rf /var/cache/apk/* 
-	
+	&& rm -rf /var/cache/apk/*
+
 #RUN apk add --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing gnu-libiconv
 ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so php
 
@@ -105,7 +106,7 @@ ADD conf/yaf.ini /usr/local/etc/php/conf.d/yaf.ini
 RUN rm /etc/localtime && ln -s /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
-	
+
 RUN echo "extension=ldap.so" > /usr/local/etc/php/conf.d/ldap.ini \
 		&& echo "extension=swoole.so" > /usr/local/etc/php/conf.d/swoole.ini \
 		&& echo "extension=gd.so" > /usr/local/etc/php/conf.d/gd.ini \
@@ -120,10 +121,11 @@ RUN echo "extension=ldap.so" > /usr/local/etc/php/conf.d/ldap.ini \
 		&& echo "extension=bcmath.so" > /usr/local/etc/php/conf.d/bcmath.ini \
 		&& echo "extension=pdo_mysql.so" > /usr/local/etc/php/conf.d/pdo_mysql.ini \
 		&& echo "extension=amqp.so" > /usr/local/etc/php/conf.d/amqp.ini \
+		&& echo "extension=grpc.so" > /usr/local/etc/php/conf.d/grpc.ini \
 		&& echo "extension=imagick.so" > /usr/local/etc/php/conf.d/imagick.ini \
 		&& echo "extension=sockets.so" > /usr/local/etc/php/conf.d/sockets.ini \
 		&& echo "extension=sysvmsg.so" > /usr/local/etc/php/conf.d/sysvmsg.ini \
-		&& echo "extension=sysvshm.so" > /usr/local/etc/php/conf.d/sysvshm.ini 
+		&& echo "extension=sysvshm.so" > /usr/local/etc/php/conf.d/sysvshm.ini
 
 ADD conf/yac.ini /usr/local/etc/php/conf.d/yac.ini
 
