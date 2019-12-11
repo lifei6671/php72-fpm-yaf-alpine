@@ -54,12 +54,12 @@ WORKDIR /usr/src/php/ext/
 RUN pecl install swoole  4.2.12 \
 	&& pecl install amqp 1.9.4 \
 	&& pecl install imagick 3.4.3 \
-	&& pecl install redis 4.2.0 \
+	&& pecl install redis 5.1.1 \
 	&& pecl install memcached 3.1.3 \
 	&& pecl install mongodb  1.5.3 \
 	&& pecl install igbinary 2.0.8 \
-	&& pecl install yaf 3.0.7 \
-	&& pecl install grpc
+	&& pecl install yaf 3.0.8 \
+	&& pecl install grpc 1.25.0
 
 # Compile Phalcon
 ENV PHALCON_VERSION=3.4.1
